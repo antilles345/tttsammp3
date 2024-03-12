@@ -30,10 +30,13 @@ function Convert-WavToMp3($inputFilePath, $outputFilePath) {
 
 # Function to convert mp3 filenames into txt file for ffmpeg concat demuxer
 function Read-files-to-list($inputList, $announcement, $outputFilePath) {
-	$inputList = "file `'"+$($inputList.FullName -join "`'`r`nfile `'")+"`'"
-	$inputList = "file `'"+$announcement+"`'`r`n"+$inputList
+	$inputList ="file `'"+$($inputList.FullName -join "`'`r`nfile `'")+"`'"
+	$inputList ="file `'"+$announcement+"`'`r`n"+$inputList
+	
 	New-Item $outputFilePath
-	Set-Content $outputFilePath $inputList
+	Set-Content $outputFilePath $inputList -Encoding Utf8
+	#Force removal of utf8 BOM to manage special characters
+	$null = New-Item -Force $outputFilePath -Value (Get-Content -Raw $outputFilePath)
 }
 
 
